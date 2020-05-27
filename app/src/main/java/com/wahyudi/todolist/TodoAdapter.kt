@@ -3,6 +3,8 @@ package com.wahyudi.todolist
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.wahyudi.todolist.utils.Commons
 import kotlinx.android.synthetic.main.item_empty.view.*
@@ -10,19 +12,49 @@ import kotlinx.android.synthetic.main.item_todo.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TodoAdapter(private val listener: (Todo, Int) -> Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class TodoAdapter(private val listener: (Todo, Int) -> Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
     private val VIEW_NO_DATA = 0
     private val VIEW_TODO = 1
 
     private var todoList = listOf<Todo>()
+    private var todoSearchResult = listOf<Todo>()
 
     fun setTodoList(todoList: List<Todo>) {
         this.todoList = todoList
+        this.todoSearchResult = todoList
         notifyDataSetChanged()
     }
 
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val keywords = constraint.toString()
+                if (keywords.isEmpty())
+                    todoSearchResult = todoList
+                else{
+                    val filteredList = ArrayList<Todo>()
+                    for (todo in todoList) {
+                        if (todo.toString().toLowerCase(Locale.ROOT).contains(keywords.toLowerCase(Locale.ROOT)))
+                            filteredList.add(todo)
+                    }
+                    todoSearchResult = filteredList
+                }
+
+                val searchResults = FilterResults()
+                searchResults.values = todoSearchResult
+                return  searchResults
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                todoSearchResult = results?.values as List<Todo>
+                notifyDataSetChanged()
+            }
+        }
+    }
+
     override fun getItemViewType(position: Int): Int {
-        return if (todoList.isEmpty())
+        return if (todoSearchResult.isEmpty())
             VIEW_NO_DATA
         else
             VIEW_TODO
@@ -36,7 +68,7 @@ class TodoAdapter(private val listener: (Todo, Int) -> Unit): RecyclerView.Adapt
         }
     }
 
-    override fun getItemCount(): Int = if (todoList.isEmpty()) 1 else todoList.size
+    override fun getItemCount(): Int = if (todoSearchResult.isEmpty()) 1 else todoSearchResult.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
@@ -46,7 +78,7 @@ class TodoAdapter(private val listener: (Todo, Int) -> Unit): RecyclerView.Adapt
             }
             VIEW_TODO -> {
                 val todoHolder = holder as TodoViewHolder
-                val sortedList = todoList.sortedWith(
+                val sortedList = todoSearchResult.sortedWith(
                     if(MainActivity.isSortByDateCreated)
                         compareBy({it.dateCreated}, {it.dateUpdated})
                     else{

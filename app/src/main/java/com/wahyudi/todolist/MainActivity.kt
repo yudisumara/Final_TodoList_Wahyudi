@@ -214,6 +214,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = (menu.findItem(R.id.menu_search_toolbar)).actionView as SearchView
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView.queryHint = "Search tasks"
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchView.clearFocus()
+                todoAdapter.filter.filter(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                todoAdapter.filter.filter(newText)
+                return false
+            }
+        })
         return super.onCreateOptionsMenu(menu)
     }
 
