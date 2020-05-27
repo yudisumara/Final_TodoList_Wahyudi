@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Todo List</string>
+    <string name="title">Nama aktivitas</string>
+    <string name="due_date">Tanggal jatuh tempo</string>
+    <string name="note">Catatan</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="save">Simpan</string>
+    <string name="cancel">Batal</string>
+    <string name="time">Jam</string>
+    <string name="no_data_to_display">Tidak ada data</string>
+    <string name="reminder_text">Ingatkan 1 jam sebelum jadwal</string>
+    <string name="search">Cari</string>
+    <string name="sort_by">Urut berdasarkan</string>
+    <string name="date_created">Tanggal dibuat</string>
+
+    <string-array name="option_edit_delete">
+        <item>Details</item>
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
 </resources>
