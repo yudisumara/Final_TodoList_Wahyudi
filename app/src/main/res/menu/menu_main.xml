@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.zulfahmi.todolist.activity.MainActivity">
+    <item
+        android:id="@+id/menu_search_toolbar"
+        android:title="@string/search"
+        android:icon="@drawable/ic_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom"/>
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort"
+        android:title="@string/sort_by"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/action_sort_date_created"
+                android:orderInCategory="1"
+                android:title="@string/date_created" />
+
+            <item
+                android:id="@+id/action_sort_due_date"
+                android:orderInCategory="2"
+                android:title="@string/due_date" />
+        </menu>
+    </item>
+</menu>
